@@ -304,6 +304,13 @@
     .parlimen { background: var(--parlimen-bg); color: var(--parlimen-fg); }
     .perlu-semak { background: var(--perlu-semak-bg); color: var(--perlu-semak-fg); }
     .kosong { padding: 24px; text-align: center; }
+    .kpi-senarai { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .kpi { display: grid; gap: 7px; align-content: start; padding: 16px; }
+    .kpi-label { color: var(--fg-2); font-size: .85rem; font-weight: 600; }
+    .kpi-nilai { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.05; }
+    .kpi-bar { height: 7px; overflow: hidden; border-radius: 999px; background: var(--trek); }
+    .kpi-bar span { display: block; height: 100%; border-radius: 999px; background: var(--selesai); }
+    .kpi-nota { color: var(--fg-2); font-size: .8rem; }
     a { color: var(--accent); font-weight: 600; }
     .form-admin {
       display: grid;
@@ -389,6 +396,8 @@
     </section>
 
     <p class="kiraan" id="kiraan" role="status" aria-live="polite"></p>
+
+    <section class="kpi-senarai" id="kpi-senarai" aria-label="Ringkasan KPI"></section>
 
     <section class="kaca panel" aria-labelledby="tajuk-chart">
       <h2 id="tajuk-chart">Bilangan rekod ikut kategori</h2>
@@ -612,6 +621,54 @@
       }).join("");
     }
 
+    function tahapStatus(status, tahap) {
+      const teks = kemas(status).toUpperCase();
+      if (teks === "N/A") return "na";
+      const padanan = new RegExp(tahap + "\\s*-\\s*([A-Z/]+)").exec(teks);
+      if (!padanan) return "none";
+      if (padanan[1].indexOf("COMPLETE") === 0) return "done";
+      if (padanan[1].indexOf("PENDING") === 0) return "pending";
+      if (padanan[1] === "N/A") return "na";
+      return "none";
+    }
+
+    function kadPeratus(label, nilai, jumlah, unit) {
+      const peratus = jumlah ? Math.round(nilai / jumlah * 100) : 0;
+      return '<article class="kaca kpi">' +
+        '<div class="kpi-label">' + esc(label) + "</div>" +
+        '<div class="kpi-nilai">' + (jumlah ? peratus + "%" : "—") + "</div>" +
+        '<div class="kpi-bar" aria-hidden="true"><span style="width:' + peratus + '%"></span></div>' +
+        '<div class="kpi-nota">' + nilai + " daripada " + jumlah + " " + esc(unit) + "</div>" +
+        "</article>";
+    }
+
+    function paparKpi(rekod) {
+      const aktif = rekod.filter(function (item) {
+        const kategori = kategoriRekod(item);
+        return kategori !== "Batal" && kategori !== "Ditangguh" && kategori !== "Pertemuan Parlimen";
+      });
+      const eventSelesai = aktif.filter(function (item) { return tahapStatus(item.status, "EVENT") === "done"; });
+      const reportSelesai = eventSelesai.filter(function (item) { return tahapStatus(item.status, "REPORT") === "done"; });
+      const submissionAsas = reportSelesai.filter(function (item) { return tahapStatus(item.status, "SUBMISSION") !== "na"; });
+      const submissionSelesai = submissionAsas.filter(function (item) { return tahapStatus(item.status, "SUBMISSION") === "done"; });
+      const adaLink = reportSelesai.filter(function (item) { return /^https?:\/\//i.test(kemas(item.link)); });
+
+      const comstra = rekod.filter(function (item) { return labelProgram(item.jenis) === "Communication Strategy"; }).length;
+      const slu = rekod.filter(function (item) { return labelProgram(item.jenis) === "Sesi Libat Urus"; }).length;
+      const parlimen = rekod.filter(function (item) { return labelProgram(item.jenis) === "Sesi Libat Urus Parlimen"; }).length;
+
+      $("kpi-senarai").innerHTML =
+        '<article class="kaca kpi">' +
+          '<div class="kpi-label">Jumlah program</div>' +
+          '<div class="kpi-nilai">' + rekod.length + "</div>" +
+          '<div class="kpi-nota">Communication Strategy ' + comstra + " · Sesi Libat Urus " + slu + " · Parlimen " + parlimen + "</div>" +
+        "</article>" +
+        kadPeratus("Event selesai", eventSelesai.length, aktif.length, "program aktif") +
+        kadPeratus("Report selesai", reportSelesai.length, eventSelesai.length, "event selesai") +
+        kadPeratus("Submission selesai", submissionSelesai.length, submissionAsas.length, "report selesai") +
+        kadPeratus("Report ada link", adaLink.length, reportSelesai.length, "report selesai");
+    }
+
     function papar() {
       document.querySelectorAll("#filter-program button").forEach(function (butang) {
         butang.setAttribute("aria-pressed", String(butang.dataset.program === pilihan.program));
@@ -625,6 +682,7 @@
       const hasil = rekodProgram.filter(function (rekod) {
         return pilihan.tetuan === "SEMUA" || kemas(rekod.tetuan) === pilihan.tetuan;
       });
+      paparKpi(hasil);
       paparChart(hasil);
       paparTable(hasil);
     }
