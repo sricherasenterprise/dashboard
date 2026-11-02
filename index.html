@@ -311,6 +311,20 @@
     .kpi-bar { height: 7px; overflow: hidden; border-radius: 999px; background: var(--trek); }
     .kpi-bar span { display: block; height: 100%; border-radius: 999px; background: var(--selesai); }
     .kpi-nota { color: var(--fg-2); font-size: .8rem; }
+    .kepala-chart { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; }
+    .petunjuk { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--fg-2); font-size: .82rem; }
+    .petunjuk span { display: inline-flex; align-items: center; gap: 6px; }
+    .warna-kecil { width: 10px; height: 10px; border-radius: 3px; }
+    .warna-comstra { background: var(--akan-datang); }
+    .warna-slu { background: var(--belum-tetap); }
+    .warna-slu-parlimen { background: var(--parlimen); }
+    .chart-bulan { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(44px, 1fr); gap: 8px; align-items: end; overflow-x: auto; padding: 8px 0; }
+    .lajur-bulan { display: grid; grid-template-rows: auto 180px auto; gap: 4px; justify-items: center; }
+    .nilai-bulan { font-size: .85rem; font-weight: 700; }
+    .batang-bulan { display: flex; flex-direction: column-reverse; width: 100%; max-width: 34px; height: 180px; gap: 2px; }
+    .batang-bulan span { display: block; min-height: 3px; }
+    .batang-bulan span:last-child { border-radius: 5px 5px 0 0; }
+    .label-bulan { color: var(--fg-2); font-size: .75rem; white-space: nowrap; }
     a { color: var(--accent); font-weight: 600; }
     .form-admin {
       display: grid;
@@ -398,6 +412,19 @@
     <p class="kiraan" id="kiraan" role="status" aria-live="polite"></p>
 
     <section class="kpi-senarai" id="kpi-senarai" aria-label="Ringkasan KPI"></section>
+
+    <section class="kaca panel" aria-labelledby="tajuk-chart-bulan">
+      <div class="kepala-chart">
+        <h2 id="tajuk-chart-bulan">Program mengikut bulan</h2>
+        <div class="petunjuk">
+          <span><i class="warna-kecil warna-comstra"></i>Communication Strategy</span>
+          <span><i class="warna-kecil warna-slu"></i>Sesi Libat Urus</span>
+          <span><i class="warna-kecil warna-slu-parlimen"></i>Sesi Libat Urus Parlimen</span>
+        </div>
+      </div>
+      <div class="chart-bulan" id="chart-bulan"></div>
+      <p class="kecil" id="nota-chart-bulan"></p>
+    </section>
 
     <section class="kaca panel" aria-labelledby="tajuk-chart">
       <h2 id="tajuk-chart">Bilangan rekod ikut kategori</h2>
@@ -621,6 +648,76 @@
       }).join("");
     }
 
+    function paparChartBulan(rekod) {
+      const namaBulan = ["Jan", "Feb", "Mac", "Apr", "Mei", "Jun", "Jul", "Ogo", "Sep", "Okt", "Nov", "Dis"];
+      const programChart = [
+        ["Communication Strategy", "warna-comstra"],
+        ["Sesi Libat Urus", "warna-slu"],
+        ["Sesi Libat Urus Parlimen", "warna-slu-parlimen"]
+      ];
+      const peta = {};
+      let diasingkan = 0;
+
+      rekod.forEach(function (item) {
+        const tarikh = tarikhSah(item.tarikh);
+        if (!tarikh || kategoriRekod(item) === "Batal") {
+          diasingkan++;
+          return;
+        }
+        const kunci = tarikh.getFullYear() + "-" + pad(tarikh.getMonth() + 1);
+        if (!peta[kunci]) peta[kunci] = {};
+        const program = labelProgram(item.jenis);
+        peta[kunci][program] = (peta[kunci][program] || 0) + 1;
+      });
+
+      const kunciAda = Object.keys(peta).sort();
+      if (!kunciAda.length) {
+        $("chart-bulan").innerHTML = '<div class="kosong">Tiada program bertarikh untuk pilihan ini.</div>';
+      } else {
+        const senaraiBulan = [];
+        let tahun = Number(kunciAda[0].slice(0, 4));
+        let bulan = Number(kunciAda[0].slice(5, 7));
+        const akhir = kunciAda[kunciAda.length - 1];
+
+        while (true) {
+          const kunci = tahun + "-" + pad(bulan);
+          senaraiBulan.push(kunci);
+          if (kunci === akhir) break;
+          bulan++;
+          if (bulan > 12) {
+            bulan = 1;
+            tahun++;
+          }
+        }
+
+        const jumlahBulan = senaraiBulan.map(function (kunci) {
+          return programChart.reduce(function (jumlah, program) {
+            return jumlah + ((peta[kunci] || {})[program[0]] || 0);
+          }, 0);
+        });
+        const paling = Math.max.apply(null, jumlahBulan.concat(1));
+
+        $("chart-bulan").innerHTML = senaraiBulan.map(function (kunci, indeks) {
+          const data = peta[kunci] || {};
+          const label = namaBulan[Number(kunci.slice(5, 7)) - 1] + " " + kunci.slice(2, 4);
+          const segmen = programChart.map(function (program) {
+            const nilai = data[program[0]] || 0;
+            if (!nilai) return "";
+            return '<span class="' + program[1] + '" style="height:' + (nilai / paling * 100) + '%" title="' + esc(program[0] + ": " + nilai) + '"></span>';
+          }).join("");
+          return '<div class="lajur-bulan">' +
+            '<div class="nilai-bulan">' + (jumlahBulan[indeks] || "") + "</div>" +
+            '<div class="batang-bulan">' + segmen + "</div>" +
+            '<div class="label-bulan">' + esc(label) + "</div>" +
+            "</div>";
+        }).join("");
+      }
+
+      $("nota-chart-bulan").textContent = diasingkan
+        ? diasingkan + " rekod batal atau tanpa tarikh sah tidak termasuk dalam chart."
+        : "";
+    }
+
     function tahapStatus(status, tahap) {
       const teks = kemas(status).toUpperCase();
       if (teks === "N/A") return "na";
@@ -683,6 +780,7 @@
         return pilihan.tetuan === "SEMUA" || kemas(rekod.tetuan) === pilihan.tetuan;
       });
       paparKpi(hasil);
+      paparChartBulan(hasil);
       paparChart(hasil);
       paparTable(hasil);
     }
