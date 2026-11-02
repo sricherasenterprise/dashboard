@@ -1,0 +1,22 @@
+{
+  "name": "Dashboard Comstra & SLU",
+  "short_name": "SCE Dashboard",
+  "description": "Dashboard program Sri Cheras Enterprise",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffcc00",
+  "theme_color": "#00746e",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s192",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s512",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}
