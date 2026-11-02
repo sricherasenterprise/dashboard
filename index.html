@@ -4,6 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard Comstra &amp; SLU</title>
+  <link rel="icon" href="https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s64" referrerpolicy="no-referrer">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s180" referrerpolicy="no-referrer">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#00746e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SCE Dashboard">
+  <style>
+    .jenama { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .logo { width: 56px; height: 56px; flex: none; border-radius: 12px; object-fit: cover; }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      ["#skrin-login .atas-auth > div", "#app .kepala > div"].forEach(function (pilih) {
+        const asal = document.querySelector(pilih);
+        if (!asal) return;
+        const jenama = document.createElement("div");
+        const logo = document.createElement("img");
+        jenama.className = "jenama";
+        logo.className = "logo";
+        logo.src = "https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s192";
+        logo.alt = "Logo Sri Cheras Enterprise";
+        logo.referrerPolicy = "no-referrer";
+        asal.parentNode.insertBefore(jenama, asal);
+        jenama.appendChild(logo);
+        jenama.appendChild(asal);
+      });
+    });
+  </script>
   <script>
     try {
       const temaSimpanan = localStorage.getItem("sce-theme");
