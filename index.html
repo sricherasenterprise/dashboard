@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dashboard Comstra &amp; SLU</title>
+  <title>Dashboard Laporan Communication Strategy dan Sesi Libat Urus</title>
   <link rel="icon" href="https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s64" referrerpolicy="no-referrer">
   <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/19Z6dGUd3405u9THN5b6Jd1RTLn-q68zB=s180" referrerpolicy="no-referrer">
   <link rel="manifest" href="manifest.webmanifest">
@@ -360,7 +360,7 @@
 
   <main id="app" hidden>
     <header class="kaca kepala">
-      <div><div class="kecil">Sri Cheras Enterprise · Program DBKL</div><h1>Dashboard Comstra &amp; SLU</h1></div>
+      <div><div class="kecil">Sri Cheras Enterprise</div><h1>DASHBOARD LAPORAN COMMUNICATION STRATEGY DAN SESI LIBAT URUS<br>SRI CHERAS ENTERPRISE</h1></div>
       <div class="tindakan-kepala">
         <span class="kecil" id="pengguna"></span>
         <span class="kecil" id="masa-data" role="status"></span>
@@ -376,9 +376,9 @@
         <span class="label" id="label-program">Program</span>
         <div class="kumpulan-butang" id="filter-program" role="group" aria-labelledby="label-program">
           <button type="button" data-program="SEMUA" aria-pressed="true">Semua</button>
-          <button type="button" data-program="Comstra" aria-pressed="false">Comstra</button>
-          <button type="button" data-program="SLU" aria-pressed="false">SLU</button>
-          <button type="button" data-program="SLU Parlimen" aria-pressed="false">SLU Parlimen</button>
+          <button type="button" data-program="Communication Strategy" aria-pressed="false">Comstra</button>
+          <button type="button" data-program="Sesi Libat Urus" aria-pressed="false">SLU</button>
+          <button type="button" data-program="Sesi Libat Urus Parlimen" aria-pressed="false">SLU Parlimen</button>
         </div>
       </div>
       <div class="medan lebar">
@@ -528,9 +528,9 @@
 
     function labelProgram(jenis) {
       const teks = kemas(jenis).toUpperCase();
-      if (teks === "COMSTRA") return "Comstra";
-      if (teks === "SLU PARLIMEN") return "SLU Parlimen";
-      if (teks === "SLU") return "SLU";
+      if (teks === "COMSTRA") return "Communication Strategy";
+      if (teks === "SLU PARLIMEN") return "Sesi Libat Urus Parlimen";
+      if (teks === "SLU") return "Sesi Libat Urus";
       return kemas(jenis) || "—";
     }
 
