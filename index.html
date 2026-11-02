@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard Comstra &amp; SLU</title>
+  <script>
+    try {
+      const temaSimpanan = localStorage.getItem("sce-theme");
+      if (temaSimpanan === "light" || temaSimpanan === "dark") {
+        document.documentElement.dataset.theme = temaSimpanan;
+      }
+    } catch (e) {}
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #dcecec;
+      --blob-a: #7fd6cf;
+      --blob-b: #c3b5f2;
+      --blob-c: #f6d8a8;
+      --fg: #0e2529;
+      --fg-2: #37525a;
+      --glass: rgba(255, 255, 255, .58);
+      --glass-kuat: rgba(255, 255, 255, .82);
+      --garis-kaca: rgba(255, 255, 255, .75);
+      --garis: rgba(14, 37, 41, .14);
+      --trek: rgba(14, 37, 41, .12);
+      --bayang: 0 10px 30px rgba(20, 60, 70, .12);
+      --accent: #00746e;
+      --on-accent: #ffffff;
+      --selesai: #17803d;
+      --selesai-bg: rgba(23, 128, 61, .14);
+      --selesai-fg: #116b32;
+      --akan-datang: #0b6fb3;
+      --akan-datang-bg: rgba(11, 111, 179, .14);
+      --akan-datang-fg: #0b5c94;
+      --belum-tetap: #6d4ac2;
+      --belum-tetap-bg: rgba(109, 74, 194, .14);
+      --belum-tetap-fg: #55379b;
+      --ditangguh: #b45f06;
+      --ditangguh-bg: rgba(180, 95, 6, .15);
+      --ditangguh-fg: #8a4b00;
+      --batal: #b3261e;
+      --batal-bg: rgba(179, 38, 30, .13);
+      --batal-fg: #9c211a;
+      --parlimen: #00746e;
+      --parlimen-bg: rgba(0, 116, 110, .14);
+      --parlimen-fg: #00635d;
+      --perlu-semak: #d9534f;
+      --perlu-semak-bg: rgba(217, 83, 79, .15);
+      --perlu-semak-fg: #9c211a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #08171c;
+        --blob-a: #0d5f5f;
+        --blob-b: #3f2c86;
+        --blob-c: #6b4312;
+        --fg: #ecf6f6;
+        --fg-2: #bdd0d3;
+        --glass: rgba(255, 255, 255, .07);
+        --glass-kuat: rgba(18, 38, 44, .88);
+        --garis-kaca: rgba(255, 255, 255, .14);
+        --garis: rgba(255, 255, 255, .16);
+        --trek: rgba(255, 255, 255, .12);
+        --bayang: 0 12px 34px rgba(0, 0, 0, .35);
+        --accent: #4fd1c8;
+        --on-accent: #06262a;
+        --selesai: #58d68d;
+        --selesai-bg: rgba(88, 214, 141, .16);
+        --selesai-fg: #8be7ae;
+        --akan-datang: #6db9f2;
+        --akan-datang-bg: rgba(109, 185, 242, .16);
+        --akan-datang-fg: #9fd1f7;
+        --belum-tetap: #a78bfa;
+        --belum-tetap-bg: rgba(167, 139, 250, .17);
+        --belum-tetap-fg: #c4b5fd;
+        --ditangguh: #f0b14a;
+        --ditangguh-bg: rgba(240, 177, 74, .16);
+        --ditangguh-fg: #f6ca7d;
+        --batal: #ff8a80;
+        --batal-bg: rgba(255, 138, 128, .16);
+        --batal-fg: #ffb0a9;
+        --parlimen: #4fd1c8;
+        --parlimen-bg: rgba(79, 209, 200, .16);
+        --parlimen-fg: #86e1da;
+        --perlu-semak: #ff6f61;
+        --perlu-semak-bg: rgba(255, 111, 97, .16);
+        --perlu-semak-fg: #ffb0a9;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #08171c;
+      --blob-a: #0d5f5f;
+      --blob-b: #3f2c86;
+      --blob-c: #6b4312;
+      --fg: #ecf6f6;
+      --fg-2: #bdd0d3;
+      --glass: rgba(255, 255, 255, .07);
+      --glass-kuat: rgba(18, 38, 44, .88);
+      --garis-kaca: rgba(255, 255, 255, .14);
+      --garis: rgba(255, 255, 255, .16);
+      --trek: rgba(255, 255, 255, .12);
+      --bayang: 0 12px 34px rgba(0, 0, 0, .35);
+      --accent: #4fd1c8;
+      --on-accent: #06262a;
+      --selesai: #58d68d;
+      --selesai-bg: rgba(88, 214, 141, .16);
+      --selesai-fg: #8be7ae;
+      --akan-datang: #6db9f2;
+      --akan-datang-bg: rgba(109, 185, 242, .16);
+      --akan-datang-fg: #9fd1f7;
+      --belum-tetap: #a78bfa;
+      --belum-tetap-bg: rgba(167, 139, 250, .17);
+      --belum-tetap-fg: #c4b5fd;
+      --ditangguh: #f0b14a;
+      --ditangguh-bg: rgba(240, 177, 74, .16);
+      --ditangguh-fg: #f6ca7d;
+      --batal: #ff8a80;
+      --batal-bg: rgba(255, 138, 128, .16);
+      --batal-fg: #ffb0a9;
+      --parlimen: #4fd1c8;
+      --parlimen-bg: rgba(79, 209, 200, .16);
+      --parlimen-fg: #86e1da;
+      --perlu-semak: #ff6f61;
+      --perlu-semak-bg: rgba(255, 111, 97, .16);
+      --perlu-semak-fg: #ffb0a9;
+    }
+
+    [hidden] { display: none !important; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.5 system-ui, sans-serif;
+    }
+    .latar {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(44vmax 38vmax at 8% 4%, var(--blob-a), transparent 68%),
+        radial-gradient(40vmax 36vmax at 94% 16%, var(--blob-b), transparent 68%),
+        radial-gradient(44vmax 40vmax at 62% 104%, var(--blob-c), transparent 68%),
+        var(--bg);
+    }
+    #app { display: grid; gap: 16px; max-width: 1200px; margin: 0 auto; }
+    .kaca {
+      min-width: 0;
+      background: var(--glass);
+      border: 1px solid var(--garis-kaca);
+      border-radius: 18px;
+      box-shadow: var(--bayang);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+      backdrop-filter: blur(18px) saturate(150%);
+    }
+    .skrin-auth { min-height: calc(100vh - 32px); display: grid; place-items: center; }
+    .kad-auth { width: 100%; max-width: 440px; padding: 24px; background: var(--glass-kuat); }
+    .atas-auth, .kepala, .tindakan-kepala {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .atas-auth { align-items: flex-start; margin-bottom: 16px; }
+    .kepala { padding: 16px 20px; }
+    .tindakan-kepala { justify-content: flex-end; }
+    h1 { margin: 0; font-size: 1.5rem; line-height: 1.2; }
+    h2 { margin: 0 0 12px; font-size: 1.05rem; }
+    .kecil { color: var(--fg-2); font-size: .85rem; }
+    form { display: grid; gap: 12px; }
+    label, .label { color: var(--fg-2); font-size: .8rem; font-weight: 600; }
+    input, select, button { font: inherit; color: inherit; }
+    input, select {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 10px;
+      border: 1px solid var(--garis);
+      border-radius: 12px;
+      background: var(--glass-kuat);
+    }
+    .medan { display: grid; gap: 4px; min-width: 0; }
+    .medan.lebar { flex: 1 1 280px; }
+    .butang-biasa, .butang-utama {
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .butang-biasa { border: 1px solid var(--garis); background: var(--glass); }
+    .butang-utama { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); }
+    button:disabled { opacity: .6; cursor: wait; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .mesej { padding: 8px 12px; border-radius: 10px; background: var(--batal-bg); font-size: .875rem; }
+    .mesej.ok { background: var(--selesai-bg); }
+    .notis { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--garis); color: var(--fg-2); font-size: .8rem; }
+    .banner { padding: 10px 14px; border-radius: 12px; background: var(--ditangguh-bg); }
+    .filter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 12px;
+      padding: 16px;
+    }
+    .kumpulan-butang {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--garis);
+      border-radius: 12px;
+      background: var(--glass);
+    }
+    .kumpulan-butang button {
+      min-height: 38px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .kumpulan-butang button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+    .kiraan { margin: 0; padding: 0 4px; font-weight: 600; }
+    .panel { padding: 16px; }
+    .chart { display: grid; gap: 10px; }
+    .baris-chart {
+      display: grid;
+      grid-template-columns: minmax(130px, 180px) minmax(0, 1fr) 2.5em;
+      gap: 10px;
+      align-items: center;
+    }
+    .nama-chart { font-size: .875rem; }
+    .trek-chart { height: 16px; overflow: hidden; border-radius: 999px; background: var(--trek); }
+    .isi-chart { display: block; height: 100%; border-radius: 999px; }
+    .nilai-chart { text-align: right; font-weight: 700; }
+    .warna-selesai { background: var(--selesai); }
+    .warna-akan-datang { background: var(--akan-datang); }
+    .warna-belum-tetap { background: var(--belum-tetap); }
+    .warna-ditangguh { background: var(--ditangguh); }
+    .warna-batal { background: var(--batal); }
+    .warna-parlimen { background: var(--parlimen); }
+    .warna-perlu-semak { background: var(--perlu-semak); }
+    .bekas-table { overflow-x: auto; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--garis);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--glass-kuat); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .kategori {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 7px;
+      font-size: .82rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .selesai { background: var(--selesai-bg); color: var(--selesai-fg); }
+    .akan-datang { background: var(--akan-datang-bg); color: var(--akan-datang-fg); }
+    .belum-tetap { background: var(--belum-tetap-bg); color: var(--belum-tetap-fg); }
+    .ditangguh { background: var(--ditangguh-bg); color: var(--ditangguh-fg); }
+    .batal { background: var(--batal-bg); color: var(--batal-fg); }
+    .parlimen { background: var(--parlimen-bg); color: var(--parlimen-fg); }
+    .perlu-semak { background: var(--perlu-semak-bg); color: var(--perlu-semak-fg); }
+    .kosong { padding: 24px; text-align: center; }
+    a { color: var(--accent); font-weight: 600; }
+    .form-admin {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+      gap: 10px;
+      align-items: end;
+      margin: 12px 0;
+    }
+    .table-admin { min-width: 560px; }
+    .bingkai-table { overflow-x: auto; border: 1px solid var(--garis); border-radius: 12px; }
+    @media (max-width: 800px) {
+      .form-admin { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .baris-chart { grid-template-columns: minmax(0, 1fr) 2.5em; }
+      .trek-chart { grid-column: 1 / -1; grid-row: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="latar" aria-hidden="true"></div>
+
+  <section class="skrin-auth" id="skrin-login" aria-labelledby="tajuk-login">
+    <div class="kaca kad-auth">
+      <div class="atas-auth">
+        <div><div class="kecil">Sri Cheras Enterprise</div><h1 id="tajuk-login">Log masuk dashboard</h1></div>
+        <button class="butang-biasa tukar-tema" type="button"></button>
+      </div>
+      <div class="mesej" id="mesej-login" role="alert" hidden></div>
+      <form id="form-login">
+        <div class="medan"><label for="login-emel">Emel</label><input id="login-emel" type="email" autocomplete="username" required></div>
+        <div class="medan"><label for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" required></div>
+        <button class="butang-utama" id="butang-login" type="submit">Log masuk</button>
+      </form>
+      <p class="notis"><b>Notis PDPA:</b> Emel, nama dan rekod cubaan log masuk diproses untuk kawalan akses dan audit keselamatan sahaja. Rekod log disimpan 180 hari.</p>
+    </div>
+  </section>
+
+  <section class="skrin-auth" id="skrin-tukar" aria-labelledby="tajuk-tukar" hidden>
+    <div class="kaca kad-auth">
+      <div class="atas-auth">
+        <div><div class="kecil">Langkah wajib</div><h1 id="tajuk-tukar">Tukar password</h1></div>
+      </div>
+      <p class="kecil">Password baru minimum 10 aksara, dengan huruf dan nombor.</p>
+      <div class="mesej" id="mesej-tukar" role="alert" hidden></div>
+      <form id="form-tukar">
+        <div class="medan"><label for="tukar-lama">Password semasa</label><input id="tukar-lama" type="password" autocomplete="current-password" required></div>
+        <div class="medan"><label for="tukar-baru">Password baru</label><input id="tukar-baru" type="password" autocomplete="new-password" required></div>
+        <div class="medan"><label for="tukar-sah">Sahkan password baru</label><input id="tukar-sah" type="password" autocomplete="new-password" required></div>
+        <button class="butang-utama" id="butang-tukar" type="submit">Tukar password</button>
+      </form>
+    </div>
+  </section>
+
+  <main id="app" hidden>
+    <header class="kaca kepala">
+      <div><div class="kecil">Sri Cheras Enterprise · Program DBKL</div><h1>Dashboard Comstra &amp; SLU</h1></div>
+      <div class="tindakan-kepala">
+        <span class="kecil" id="pengguna"></span>
+        <span class="kecil" id="masa-data" role="status"></span>
+        <button class="butang-biasa" id="refresh" type="button">↻ Refresh</button>
+        <button class="butang-biasa tukar-tema" type="button"></button>
+        <button class="butang-biasa" id="logout" type="button">Log keluar</button>
+      </div>
+    </header>
+    <div class="banner" id="banner" role="status" hidden></div>
+
+    <section class="kaca filter" aria-label="Filter">
+      <div class="medan">
+        <span class="label" id="label-program">Program</span>
+        <div class="kumpulan-butang" id="filter-program" role="group" aria-labelledby="label-program">
+          <button type="button" data-program="SEMUA" aria-pressed="true">Semua</button>
+          <button type="button" data-program="Comstra" aria-pressed="false">Comstra</button>
+          <button type="button" data-program="SLU" aria-pressed="false">SLU</button>
+          <button type="button" data-program="SLU Parlimen" aria-pressed="false">SLU Parlimen</button>
+        </div>
+      </div>
+      <div class="medan lebar">
+        <label for="filter-tetuan">Tetuan</label>
+        <select id="filter-tetuan"></select>
+      </div>
+      <button class="butang-biasa" id="reset-filter" type="button">Reset</button>
+    </section>
+
+    <p class="kiraan" id="kiraan" role="status" aria-live="polite"></p>
+
+    <section class="kaca panel" aria-labelledby="tajuk-chart">
+      <h2 id="tajuk-chart">Bilangan rekod ikut kategori</h2>
+      <div class="chart" id="chart-kategori"></div>
+    </section>
+
+    <section class="kaca bekas-table" aria-label="Senarai program">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Tarikh</th>
+            <th scope="col">Program</th>
+            <th scope="col">No. Fail DBKL</th>
+            <th scope="col">Tetuan</th>
+            <th scope="col">Lokasi</th>
+            <th scope="col">Kategori</th>
+            <th scope="col">Report</th>
+          </tr>
+        </thead>
+        <tbody id="isi-table"></tbody>
+      </table>
+    </section>
+
+    <section class="kaca panel" id="panel-admin" aria-labelledby="tajuk-admin" hidden>
+      <h2 id="tajuk-admin">Urus pengguna</h2>
+      <p class="kecil">Simpan emel kerja dan nama sahaja. Jangan masukkan IC atau data kesihatan. Maklumkan notis PDPA kepada pengguna baru.</p>
+      <div class="mesej" id="mesej-admin" role="status" hidden></div>
+      <form class="form-admin" id="form-admin">
+        <div class="medan"><label for="admin-nama">Nama</label><input id="admin-nama" type="text" maxlength="100" required></div>
+        <div class="medan"><label for="admin-emel">Emel</label><input id="admin-emel" type="email" autocomplete="off" required></div>
+        <div class="medan">
+          <label for="admin-role">Role</label>
+          <select id="admin-role"><option value="VIEWER">VIEWER</option><option value="ADMIN">ADMIN</option></select>
+        </div>
+        <div class="medan"><label for="admin-password">Password sementara</label><input id="admin-password" type="password" autocomplete="new-password" required></div>
+        <button class="butang-utama" id="butang-admin" type="submit">Tambah</button>
+      </form>
+      <div class="bingkai-table">
+        <table class="table-admin">
+          <thead>
+            <tr>
+              <th scope="col">Nama</th>
+              <th scope="col">Emel</th>
+              <th scope="col">Role</th>
+              <th scope="col">Status</th>
+              <th scope="col">Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="isi-admin"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    // TAMPAL URL WEB APP DI ANTARA TANDA PETIK
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbw11F6CmgJ1eRLxBjYQfkAPlRRG5OCTVZ8nvpP9IISkZzi3RX-5kvZlxSWveQvYRsZR/exec";
+
+    const KELAS_KATEGORI = {
+      "Selesai": "selesai",
+      "Akan datang": "akan-datang",
+      "Tarikh belum tetap": "belum-tetap",
+      "Ditangguh": "ditangguh",
+      "Batal": "batal",
+      "Pertemuan Parlimen": "parlimen",
+      "Perlu semak": "perlu-semak"
+    };
+    const SUSUNAN_KATEGORI = Object.keys(KELAS_KATEGORI);
+    const AUTO_REFRESH_MS = 120000;
+    const FOKUS_REFRESH_MS = 30000;
+
+    const $ = function (id) { return document.getElementById(id); };
+    const pilihan = { program: "SEMUA", tetuan: "SEMUA" };
+    const sesi = { token: "", user: null };
+    let semuaRekod = [];
+    let dataTerakhir = "";
+    let masaTerakhir = 0;
+    let sedangMuat = false;
+
+    function kemas(nilai) {
+      return String(nilai == null ? "" : nilai).replace(/\s+/g, " ").trim();
+    }
+
+    function esc(nilai) {
+      return String(nilai == null ? "" : nilai).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+
+    function tarikhSah(teks) {
+      const padanan = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(kemas(teks));
+      if (!padanan) return null;
+
+      const hari = Number(padanan[1]);
+      const bulan = Number(padanan[2]);
+      const tahun = Number(padanan[3]);
+      const tarikh = new Date(tahun, bulan - 1, hari);
+
+      if (tarikh.getFullYear() !== tahun || tarikh.getMonth() !== bulan - 1 || tarikh.getDate() !== hari) {
+        return null;
+      }
+      return tarikh;
+    }
+
+    function kategoriRekod(rekod) {
+      const jenis = kemas(rekod.jenis).toUpperCase();
+      const status = kemas(rekod.status).toUpperCase();
+      if (jenis === "SLU PARLIMEN") return "Pertemuan Parlimen";
+      if (status === "BATAL") return "Batal";
+      if (status === "DITANGGUH") return "Ditangguh";
+      if (/EVENT\s*-\s*COMPLETE/.test(status)) return "Selesai";
+
+      const tarikh = tarikhSah(rekod.tarikh);
+      if (!tarikh) return "Tarikh belum tetap";
+
+      const hariIni = new Date();
+      hariIni.setHours(0, 0, 0, 0);
+      return tarikh >= hariIni ? "Akan datang" : "Perlu semak";
+    }
+
+    function barisKeRekod(baris) {
+      return {
+        tarikh: baris[0],
+        jenis: baris[1],
+        fail: baris[2],
+        tetuan: baris[3],
+        penjelasan: baris[4],
+        lokasi: baris[5],
+        status: baris[6],
+        link: baris[7]
+      };
+    }
+
+    function labelProgram(jenis) {
+      const teks = kemas(jenis).toUpperCase();
+      if (teks === "COMSTRA") return "Comstra";
+      if (teks === "SLU PARLIMEN") return "SLU Parlimen";
+      if (teks === "SLU") return "SLU";
+      return kemas(jenis) || "—";
+    }
+
+    function selKosong(nilai) {
+      return esc(kemas(nilai)) || "—";
+    }
+
+    function selLink(link) {
+      const url = kemas(link);
+      if (!/^https?:\/\//i.test(url)) return "—";
+      return '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Buka</a>';
+    }
+
+    function paparPilihanTetuan(rekodProgram) {
+      const senarai = Array.from(new Set(rekodProgram.map(function (rekod) {
+        return kemas(rekod.tetuan);
+      }).filter(Boolean))).sort(function (a, b) {
+        return a.localeCompare(b, "ms");
+      });
+
+      if (pilihan.tetuan !== "SEMUA" && senarai.indexOf(pilihan.tetuan) < 0) pilihan.tetuan = "SEMUA";
+
+      const dropdown = $("filter-tetuan");
+      dropdown.textContent = "";
+
+      const semua = document.createElement("option");
+      semua.value = "SEMUA";
+      semua.textContent = "Semua tetuan (" + senarai.length + ")";
+      dropdown.appendChild(semua);
+
+      senarai.forEach(function (nama) {
+        const option = document.createElement("option");
+        option.value = nama;
+        option.textContent = nama;
+        dropdown.appendChild(option);
+      });
+      dropdown.value = pilihan.tetuan;
+    }
+
+    function paparChart(rekod) {
+      const kiraan = {};
+      SUSUNAN_KATEGORI.forEach(function (kategori) { kiraan[kategori] = 0; });
+      rekod.forEach(function (item) { kiraan[kategoriRekod(item)]++; });
+
+      const paling = Math.max.apply(null, SUSUNAN_KATEGORI.map(function (kategori) {
+        return kiraan[kategori];
+      }).concat(1));
+
+      $("chart-kategori").innerHTML = SUSUNAN_KATEGORI.map(function (kategori) {
+        const nilai = kiraan[kategori];
+        const lebar = nilai / paling * 100;
+        return '<div class="baris-chart">' +
+          '<span class="nama-chart">' + esc(kategori) + "</span>" +
+          '<span class="trek-chart" aria-hidden="true"><span class="isi-chart warna-' + KELAS_KATEGORI[kategori] + '" style="width:' + lebar + '%"></span></span>' +
+          '<span class="nilai-chart">' + nilai + "</span>" +
+          "</div>";
+      }).join("");
+    }
+
+    function paparTable(rekod) {
+      $("kiraan").textContent = rekod.length + " daripada " + semuaRekod.length + " rekod";
+
+      if (!rekod.length) {
+        $("isi-table").innerHTML = '<tr><td class="kosong" colspan="7">Tiada rekod sepadan. Tekan Reset untuk paparkan semua.</td></tr>';
+        return;
+      }
+
+      $("isi-table").innerHTML = rekod.map(function (item) {
+        const kategori = kategoriRekod(item);
+        return "<tr>" +
+          "<td>" + selKosong(item.tarikh) + "</td>" +
+          "<td>" + esc(labelProgram(item.jenis)) + "</td>" +
+          "<td>" + selKosong(item.fail) + "</td>" +
+          "<td>" + selKosong(item.tetuan) + "</td>" +
+          "<td>" + selKosong(item.lokasi) + "</td>" +
+          '<td><span class="kategori ' + KELAS_KATEGORI[kategori] + '">' + esc(kategori) + "</span></td>" +
+          "<td>" + selLink(item.link) + "</td>" +
+          "</tr>";
+      }).join("");
+    }
+
+    function papar() {
+      document.querySelectorAll("#filter-program button").forEach(function (butang) {
+        butang.setAttribute("aria-pressed", String(butang.dataset.program === pilihan.program));
+      });
+
+      const rekodProgram = semuaRekod.filter(function (rekod) {
+        return pilihan.program === "SEMUA" || labelProgram(rekod.jenis) === pilihan.program;
+      });
+      paparPilihanTetuan(rekodProgram);
+
+      const hasil = rekodProgram.filter(function (rekod) {
+        return pilihan.tetuan === "SEMUA" || kemas(rekod.tetuan) === pilihan.tetuan;
+      });
+      paparChart(hasil);
+      paparTable(hasil);
+    }
+
+    /* ---------- API dan sesi ---------- */
+
+    function simpanToken(token) {
+      sesi.token = token;
+      try {
+        if (token) sessionStorage.setItem("sce-token", token);
+        else sessionStorage.removeItem("sce-token");
+      } catch (e) {}
+    }
+
+    function bacaToken() {
+      try { return sessionStorage.getItem("sce-token") || ""; } catch (e) { return ""; }
+    }
+
+    async function api(action, data) {
+      if (!/^https:\/\/script\.google\.com\//.test(GAS_URL)) {
+        throw new Error("GAS_URL belum diisi dalam index.html.");
+      }
+
+      let res;
+      try {
+        res = await fetch(GAS_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(Object.assign({ action: action, token: sesi.token }, data || {}))
+        });
+      } catch (e) {
+        throw new Error("Tak dapat hubungi server. Semak internet atau GAS_URL.");
+      }
+
+      let out;
+      try {
+        out = await res.json();
+      } catch (e) {
+        throw new Error("Jawapan server tak sah. Semak deployment Apps Script.");
+      }
+
+      if (!out.ok) {
+        const err = new Error(out.error || "Ralat tak diketahui.");
+        err.code = out.code;
+        throw err;
+      }
+      return out;
+    }
+
+    function pesan(id, teks, ok) {
+      $(id).hidden = !teks;
+      $(id).textContent = teks || "";
+      $(id).classList.toggle("ok", !!ok);
+    }
+
+    function skrin(nama) {
+      $("skrin-login").hidden = nama !== "login";
+      $("skrin-tukar").hidden = nama !== "tukar";
+      $("app").hidden = nama !== "app";
+    }
+
+    function keLogin(mesej) {
+      simpanToken("");
+      sesi.user = null;
+      semuaRekod = [];
+      dataTerakhir = "";
+      masaTerakhir = 0;
+      pilihan.program = "SEMUA";
+      pilihan.tetuan = "SEMUA";
+      $("isi-table").innerHTML = "";
+      $("chart-kategori").innerHTML = "";
+      $("isi-admin").innerHTML = "";
+      $("panel-admin").hidden = true;
+      $("form-admin").reset();
+      pesan("mesej-admin", "");
+      $("form-login").reset();
+      $("form-tukar").reset();
+      pesan("mesej-login", mesej || "");
+      skrin("login");
+    }
+
+    function urusRalatSesi(err) {
+      if (err.code === "SESI_TAMAT") {
+        keLogin(err.message);
+        return true;
+      }
+      if (err.code === "MESTI_TUKAR_PASSWORD") {
+        skrin("tukar");
+        return true;
+      }
+      return false;
+    }
+
+    async function muatData(senyap) {
+      if (sedangMuat) return;
+      sedangMuat = true;
+      if (!senyap) $("masa-data").textContent = "Memuatkan data…";
+
+      try {
+        const out = await api("GET_DATA");
+        if (!sesi.token) return;
+
+        sesi.user = out.user;
+        $("pengguna").textContent = out.user.nama + " · " + out.user.role;
+        $("panel-admin").hidden = out.user.role !== "ADMIN";
+        const masa = new Date(out.dikemasKini);
+        $("masa-data").textContent = "Data: " + pad(masa.getDate()) + "/" + pad(masa.getMonth() + 1) + "/" + masa.getFullYear() + " " + pad(masa.getHours()) + ":" + pad(masa.getMinutes());
+        $("banner").hidden = true;
+        masaTerakhir = Date.now();
+
+        const baru = JSON.stringify(out.data);
+        if (baru !== dataTerakhir) {
+          dataTerakhir = baru;
+          semuaRekod = Object.keys(out.data).reduce(function (hasil, kunci) {
+            return hasil.concat(out.data[kunci].slice(1).map(barisKeRekod));
+          }, []);
+          papar();
+        }
+      } catch (err) {
+        if (urusRalatSesi(err)) return;
+        $("masa-data").textContent = "Data gagal dimuatkan";
+        $("banner").hidden = false;
+        $("banner").textContent = "Data terbaru tak dapat dimuatkan: " + err.message + " Tekan Refresh untuk cuba lagi.";
+      } finally {
+        sedangMuat = false;
+      }
+    }
+
+    async function muatPengguna() {
+      if (!sesi.user || sesi.user.role !== "ADMIN") return;
+      try {
+        const out = await api("SENARAI_USER");
+        $("isi-admin").innerHTML = out.users.map(function (user) {
+          const aktif = user.status === "AKTIF";
+          const diri = sesi.user && user.emel === sesi.user.emel;
+          const tindakan = diri
+            ? "—"
+            : '<button class="butang-biasa" type="button" data-emel="' + esc(user.emel) + '" data-status="' + (aktif ? "TIDAK_AKTIF" : "AKTIF") + '">' + (aktif ? "Nyahaktif" : "Aktifkan") + "</button>";
+          return "<tr>" +
+            "<td>" + selKosong(user.nama) + "</td>" +
+            "<td>" + selKosong(user.emel) + "</td>" +
+            "<td>" + selKosong(user.role) + "</td>" +
+            '<td><span class="kategori ' + (aktif ? "selesai" : "batal") + '">' + (aktif ? "Aktif" : "Tidak aktif") + "</span></td>" +
+            "<td>" + tindakan + "</td>" +
+            "</tr>";
+        }).join("");
+      } catch (err) {
+        if (!urusRalatSesi(err)) pesan("mesej-admin", err.message);
+      }
+    }
+
+    async function bukaDashboard() {
+      skrin("app");
+      await muatData();
+      if (!$("app").hidden) await muatPengguna();
+    }
+
+    /* ---------- Tema ---------- */
+
+    function temaSemasa() {
+      const tema = document.documentElement.dataset.theme;
+      if (tema) return tema;
+      return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+
+    function paparButangTema() {
+      document.querySelectorAll(".tukar-tema").forEach(function (butang) {
+        const tema = temaSemasa();
+        butang.textContent = tema === "dark" ? "☀ Light" : "☾ Dark";
+        butang.setAttribute("aria-label", tema === "dark" ? "Tukar ke light theme" : "Tukar ke dark theme");
+      });
+    }
+
+    document.querySelectorAll(".tukar-tema").forEach(function (butang) {
+      butang.addEventListener("click", function () {
+        const seterusnya = temaSemasa() === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = seterusnya;
+        try { localStorage.setItem("sce-theme", seterusnya); } catch (e) {}
+        paparButangTema();
+      });
+    });
+
+    /* ---------- Events ---------- */
+
+    $("filter-program").addEventListener("click", function (event) {
+      const butang = event.target.closest("button");
+      if (!butang) return;
+      pilihan.program = butang.dataset.program;
+      papar();
+    });
+
+    $("filter-tetuan").addEventListener("change", function (event) {
+      pilihan.tetuan = event.target.value;
+      papar();
+    });
+
+    $("reset-filter").addEventListener("click", function () {
+      pilihan.program = "SEMUA";
+      pilihan.tetuan = "SEMUA";
+      papar();
+    });
+
+    $("refresh").addEventListener("click", function () { muatData(); });
+
+    function bolehAutoRefresh() {
+      return sesi.token && !$("app").hidden && !document.hidden;
+    }
+
+    setInterval(function () {
+      if (bolehAutoRefresh()) muatData(true);
+    }, AUTO_REFRESH_MS);
+
+    document.addEventListener("visibilitychange", function () {
+      if (bolehAutoRefresh() && Date.now() - masaTerakhir > FOKUS_REFRESH_MS) muatData(true);
+    });
+
+    $("form-login").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      pesan("mesej-login", "");
+      $("butang-login").disabled = true;
+
+      try {
+        const out = await api("LOGIN", { emel: $("login-emel").value, password: $("login-password").value });
+        simpanToken(out.token);
+        sesi.user = out.user;
+        $("login-password").value = "";
+        if (out.user.mestiTukarPassword) skrin("tukar");
+        else await bukaDashboard();
+      } catch (err) {
+        pesan("mesej-login", err.message);
+      } finally {
+        $("butang-login").disabled = false;
+      }
+    });
+
+    $("form-tukar").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      pesan("mesej-tukar", "");
+
+      if ($("tukar-baru").value !== $("tukar-sah").value) {
+        pesan("mesej-tukar", "Password baru dan pengesahan tak sama.");
+        return;
+      }
+
+      $("butang-tukar").disabled = true;
+      try {
+        const out = await api("TUKAR_PASSWORD", {
+          passwordLama: $("tukar-lama").value,
+          passwordBaru: $("tukar-baru").value
+        });
+        simpanToken(out.token);
+        sesi.user = out.user;
+        $("form-tukar").reset();
+        await bukaDashboard();
+      } catch (err) {
+        if (!urusRalatSesi(err)) pesan("mesej-tukar", err.message);
+      } finally {
+        $("butang-tukar").disabled = false;
+      }
+    });
+
+    $("form-admin").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      pesan("mesej-admin", "");
+      $("butang-admin").disabled = true;
+
+      try {
+        await api("TAMBAH_USER", {
+          nama: $("admin-nama").value,
+          emel: $("admin-emel").value,
+          role: $("admin-role").value,
+          passwordSementara: $("admin-password").value
+        });
+        $("form-admin").reset();
+        pesan("mesej-admin", "Pengguna ditambah. Pengguna perlu tukar password semasa log masuk pertama.", true);
+        await muatPengguna();
+      } catch (err) {
+        if (!urusRalatSesi(err)) pesan("mesej-admin", err.message);
+      } finally {
+        $("butang-admin").disabled = false;
+      }
+    });
+
+    $("isi-admin").addEventListener("click", async function (event) {
+      const butang = event.target.closest("[data-emel]");
+      if (!butang) return;
+
+      butang.disabled = true;
+      pesan("mesej-admin", "");
+      try {
+        await api("TUKAR_STATUS_USER", { emel: butang.dataset.emel, status: butang.dataset.status });
+        await muatPengguna();
+      } catch (err) {
+        if (!urusRalatSesi(err)) pesan("mesej-admin", err.message);
+        butang.disabled = false;
+      }
+    });
+
+    $("logout").addEventListener("click", async function () {
+      try { await api("LOGOUT"); } catch (e) {}
+      keLogin();
+    });
+
+    /* Data hanya dimuatkan selepas server sahkan token. */
+    paparButangTema();
+    (async function mula() {
+      const token = bacaToken();
+      if (!token) {
+        skrin("login");
+        return;
+      }
+      sesi.token = token;
+      await bukaDashboard();
+    })();
+  </script>
+</body>
+</html>
