@@ -311,6 +311,22 @@
     .kpi-bar { height: 7px; overflow: hidden; border-radius: 999px; background: var(--trek); }
     .kpi-bar span { display: block; height: 100%; border-radius: 999px; background: var(--selesai); }
     .kpi-nota { color: var(--fg-2); font-size: .8rem; }
+    #app { max-width: 1400px; grid-template-columns: 240px minmax(0, 1fr); align-items: start; }
+    #app > .kepala, #app > .banner { grid-column: 1 / -1; }
+    .menu-utama { position: sticky; top: 16px; display: grid; gap: 6px; padding: 12px; }
+    .menu-tajuk { margin: 4px 8px 8px; color: var(--fg-2); font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .menu-utama button { min-height: 44px; padding: 8px 12px; border: 0; border-radius: 12px; background: transparent; text-align: left; font-weight: 600; cursor: pointer; }
+    .menu-utama button:hover { background: var(--trek); }
+    .menu-utama button[aria-current="page"] { background: var(--accent); color: var(--on-accent); }
+    .paparan { display: grid; gap: 16px; min-width: 0; }
+    .senarai-video { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .kad-video { padding: 16px; border: 1px solid var(--garis); border-radius: 14px; background: var(--glass); }
+    .kad-video h3 { margin: 0 0 6px; font-size: 1rem; }
+    @media (max-width: 900px) {
+      #app { grid-template-columns: minmax(0, 1fr); }
+      .menu-utama { position: static; grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; }
+      .menu-tajuk { display: none; }
+    }
     .kepala-chart { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; }
     .petunjuk { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--fg-2); font-size: .82rem; }
     .petunjuk span { display: inline-flex; align-items: center; gap: 6px; }
@@ -392,6 +408,16 @@
     </header>
     <div class="banner" id="banner" role="status" hidden></div>
 
+    <nav class="kaca menu-utama" id="menu-utama" aria-label="Navigasi utama">
+      <p class="menu-tajuk">Navigasi utama</p>
+      <button type="button" data-paparan="paparan-dashboard" aria-current="page">Dashboard Utama</button>
+      <button type="button" data-paparan="paparan-garis">Garis Panduan Perancangan</button>
+      <button type="button" data-paparan="paparan-profil">Profil Syarikat</button>
+      <button type="button" data-paparan="paparan-portal">Portal Staf</button>
+    </nav>
+
+    <div class="paparan" id="paparan-dashboard">
+
     <section class="kaca filter" aria-label="Filter">
       <div class="medan">
         <span class="label" id="label-program">Program</span>
@@ -448,7 +474,38 @@
       </table>
     </section>
 
-    <section class="kaca panel" id="panel-admin" aria-labelledby="tajuk-admin" hidden>
+    </div>
+
+    <div class="paparan" id="paparan-garis" hidden>
+      <section class="kaca panel" aria-labelledby="tajuk-garis">
+        <h2 id="tajuk-garis">Garis Panduan Perancangan</h2>
+        <div class="senarai-video">
+          <article class="kad-video">
+            <h3>Video Garis Panduan Communication Strategy</h3>
+            <p class="kecil">Video akan ditambah.</p>
+          </article>
+          <article class="kad-video">
+            <h3>Video Garis Panduan Sesi Libat Urus</h3>
+            <p class="kecil">Video akan ditambah.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="paparan" id="paparan-profil" hidden>
+      <section class="kaca panel" aria-labelledby="tajuk-profil">
+        <h2 id="tajuk-profil">Profil Syarikat</h2>
+        <p class="kecil">Kandungan profil syarikat akan ditambah.</p>
+      </section>
+    </div>
+
+    <div class="paparan" id="paparan-portal" hidden>
+      <section class="kaca panel" aria-labelledby="tajuk-portal">
+        <h2 id="tajuk-portal">Portal Staf</h2>
+        <p class="kecil">Kandungan portal staf akan ditambah.</p>
+      </section>
+
+      <section class="kaca panel" id="panel-admin" aria-labelledby="tajuk-admin" hidden>
       <h2 id="tajuk-admin">Urus pengguna</h2>
       <p class="kecil">Simpan emel kerja dan nama sahaja. Jangan masukkan IC atau data kesihatan. Maklumkan notis PDPA kepada pengguna baru.</p>
       <div class="mesej" id="mesej-admin" role="status" hidden></div>
@@ -477,7 +534,8 @@
         </table>
       </div>
     </section>
-  </main>
+  </div>
+  </main>/main>
 
   <script>
     "use strict";
@@ -1082,6 +1140,22 @@
     $("logout").addEventListener("click", async function () {
       try { await api("LOGOUT"); } catch (e) {}
       keLogin();
+    });
+
+    function bukaPaparan(id) {
+      document.querySelectorAll(".paparan").forEach(function (paparan) {
+        paparan.hidden = paparan.id !== id;
+      });
+      document.querySelectorAll("#menu-utama button").forEach(function (butang) {
+        if (butang.dataset.paparan === id) butang.setAttribute("aria-current", "page");
+        else butang.removeAttribute("aria-current");
+      });
+      window.scrollTo(0, 0);
+    }
+
+    $("menu-utama").addEventListener("click", function (event) {
+      const butang = event.target.closest("[data-paparan]");
+      if (butang) bukaPaparan(butang.dataset.paparan);
     });
 
     /* Data hanya dimuatkan selepas server sahkan token. */
