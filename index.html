@@ -310,6 +310,12 @@
     .kpi-bar { height: 7px; overflow: hidden; border-radius: 999px; background: var(--trek); }
     .kpi-bar span { display: block; height: 100%; border-radius: 999px; background: var(--selesai); }
     .kpi-nota { color: var(--fg-2); font-size: .8rem; }
+    .profil { display: grid; gap: 16px; }
+    .profil-seksyen { padding: 16px; border: 1px solid var(--garis); border-radius: 14px; background: var(--glass); }
+    .profil-seksyen h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .profil-seksyen p { margin: 0 0 10px; }
+    .profil-seksyen p:last-child, .profil-seksyen ul:last-child, .profil-seksyen ol:last-child { margin-bottom: 0; }
+    .profil-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
     .tetamu .medan.lebar, .tetamu .bekas-table, .tetamu #logout { display: none !important; }
     body:not(.tetamu) .tetamu-sahaja { display: none !important; }
     #app { max-width: 1400px; grid-template-columns: 240px minmax(0, 1fr); align-items: start; }
@@ -499,7 +505,63 @@
     <div class="paparan" id="paparan-profil" hidden>
       <section class="kaca panel" aria-labelledby="tajuk-profil">
         <h2 id="tajuk-profil">Profil Syarikat</h2>
-        <p class="kecil">Kandungan profil syarikat akan ditambah.</p>
+        <div class="profil">
+          <article class="profil-seksyen">
+            <h3>Latar Belakang</h3>
+            <p>Sri Cheras Enterprise (001153250-P) ialah syarikat perundingan dan kontraktor Bumiputera yang berdaftar dengan Kementerian Kewangan Malaysia. Kami menyediakan perkhidmatan kontraktor paparan iklan R3, R5 dan R7 DBKL, serta perundingan Communication Strategy dan Sesi Libat Urus.</p>
+            <p>Pasukan kami merangka, melaksana dan memantau sesi supaya maklumat projek sampai kepada khalayak sasaran dengan jelas. Lebih 20 syarikat telah menggunakan khidmat SCE sebagai konsultan.</p>
+          </article>
+
+          <article class="profil-seksyen">
+            <h3>Perutusan Pengurus</h3>
+            <p><b>Hj. Amran Sulaiman</b></p>
+            <p>Selaku syarikat perundingan dan kontraktor Bumiputera, Sri Cheras Enterprise kekal teguh menyampaikan perkhidmatan yang berkualiti dan berintegriti. Kami percaya kejayaan projek bermula dengan profesionalisme, ketelusan dan komitmen terhadap kecemerlangan.</p>
+            <p>Pasukan kami berusaha memahami visi pelanggan dan menterjemahkannya kepada hasil yang berjaya, sambil menguruskan cabaran dengan cekap.</p>
+          </article>
+
+          <div class="profil-grid">
+            <article class="profil-seksyen">
+              <h3>Visi</h3>
+              <p>Menjadi peneraju dalam penyediaan paparan iklan dan sesi penerangan Communication Strategy yang membawa impak positif kepada masyarakat dan pemaju.</p>
+            </article>
+            <article class="profil-seksyen">
+              <h3>Misi</h3>
+              <ol>
+                <li>Menyediakan perkhidmatan kontraktor paparan iklan DBKL yang berkualiti dan mematuhi piawaian.</li>
+                <li>Membangunkan dan melaksanakan Communication Strategy serta Sesi Libat Urus yang strategik dan telus.</li>
+                <li>Memupuk hubungan yang kukuh dengan pihak berkepentingan melalui profesionalisme, ketelusan dan nilai-nilai Bumiputera.</li>
+              </ol>
+            </article>
+          </div>
+
+          <article class="profil-seksyen">
+            <h3>Perkhidmatan</h3>
+            <ul>
+              <li>Kontraktor Paparan Iklan DBKL (R3, R5 dan R7)</li>
+              <li>Perundingan Communication Strategy</li>
+              <li>Perundingan Sesi Libat Urus</li>
+            </ul>
+          </article>
+
+          <article class="profil-seksyen">
+            <h3>Pencapaian</h3>
+            <p><b>Fasa 1 (1997 hingga 2002):</b> Menjalankan perniagaan trading dengan pelbagai klien, termasuk Tabung Haji Jalan Tun Razak, Peladang Kuala Selangor dan DBKL Jalan Raja Laut.</p>
+            <p><b>Fasa 2 (2002 hingga 2008):</b> Terlibat dalam kerja stamping press dan pembuatan acuan untuk syarikat pembekal PROTON dan PERODUA.</p>
+            <p><b>Fasa 3 (2013 hingga sekarang):</b> Menyediakan perkhidmatan kontraktor paparan iklan DBKL, serta Communication Strategy dan Sesi Libat Urus.</p>
+          </article>
+
+          <article class="profil-seksyen">
+            <h3>Rekod Communication Strategy</h3>
+            <p>Setakat Ogos 2026, mengikut dokumen profil: <b>45 sesi</b> (2021: 3, 2023: 2, 2024: 14, 2025: 12, 2026: 14).</p>
+          </article>
+
+          <article class="profil-seksyen">
+            <h3>Hubungi Kami</h3>
+            <p><b>Hj. Amran Sulaiman:</b> <a href="tel:+60126283328">011-2628 3328</a></p>
+            <p><b>Emel:</b> <a href="mailto:sricherasenterprise@gmail.com">sricherasenterprise@gmail.com</a>, <a href="mailto:amransce@gmail.com">amransce@gmail.com</a></p>
+            <p><b>Lokasi:</b> 51100, Kuala Lumpur</p>
+          </article>
+        </div>
       </section>
     </div>
 
