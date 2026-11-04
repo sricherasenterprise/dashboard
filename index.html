@@ -310,6 +310,8 @@
     .kpi-bar { height: 7px; overflow: hidden; border-radius: 999px; background: var(--trek); }
     .kpi-bar span { display: block; height: 100%; border-radius: 999px; background: var(--selesai); }
     .kpi-nota { color: var(--fg-2); font-size: .8rem; }
+    .tetamu .medan.lebar, .tetamu .bekas-table, .tetamu #logout { display: none !important; }
+    body:not(.tetamu) .tetamu-sahaja { display: none !important; }
     #app { max-width: 1400px; grid-template-columns: 240px minmax(0, 1fr); align-items: start; }
     #app > .kepala, #app > .banner { grid-column: 1 / -1; }
     .menu-utama { position: sticky; top: 16px; display: grid; gap: 6px; padding: 12px; }
@@ -827,7 +829,7 @@
         kadPeratus("Report ada link", adaLink.length, reportSelesai.length, "report selesai");
     }
 
-    function papar() {
+    function papar() {if (!sesi.token) { paparTetamu(); return; }
       document.querySelectorAll("#filter-program button").forEach(function (butang) {
         butang.setAttribute("aria-pressed", String(butang.dataset.program === pilihan.program));
       });
@@ -897,7 +899,7 @@
       $(id).classList.toggle("ok", !!ok);
     }
 
-    function skrin(nama) {
+    function skrin(nama) {document.body.classList.toggle("tetamu", !sesi.token);
       $("skrin-login").hidden = nama !== "login";
       $("skrin-tukar").hidden = nama !== "tukar";
       $("app").hidden = nama !== "app";
@@ -935,7 +937,7 @@
       return false;
     }
 
-    async function muatData(senyap) {
+    async function muatData(senyap) {if (!sesi.token) { await muatRingkasan(); return; }
       if (sedangMuat) return;
       sedangMuat = true;
       if (!senyap) $("masa-data").textContent = "Memuatkan data…";
@@ -1142,10 +1144,10 @@
 
     $("logout").addEventListener("click", async function () {
       try { await api("LOGOUT"); } catch (e) {}
-      keLogin();
+      keLogin(); bukaTetamu();
     });
 
-    function bukaPaparan(id) {
+    function bukaPaparan(id) { if (id === "paparan-portal" && !sesi.token) { skrin("login"); return; }
       document.querySelectorAll(".paparan").forEach(function (paparan) {
         paparan.hidden = paparan.id !== id;
       });
@@ -1172,10 +1174,112 @@
       if (butang) bukaPaparan(butang.dataset.paparan);
     });
 
+    let ringkasanAwam = null;
+
+    function kunciRingkasan() {
+      return {
+        "SEMUA": "SEMUA",
+        "Communication Strategy": "COMSTRA",
+        "Sesi Libat Urus": "SLU",
+        "Sesi Libat Urus Parlimen": "PARLIMEN"
+      }[pilihan.program] || "SEMUA";
+    }
+
+    function paparTetamu() {
+      document.querySelectorAll("#filter-program button").forEach(function (butang) {
+        butang.setAttribute("aria-pressed", String(butang.dataset.program === pilihan.program));
+      });
+      if (!ringkasanAwam) return;
+
+      const r = ringkasanAwam.ringkasan[kunciRingkasan()];
+      $("kiraan").textContent = r.jumlah + " rekod";
+
+      $("kpi-senarai").innerHTML =
+        '<article class="kaca kpi">' +
+          '<div class="kpi-label">Jumlah program</div>' +
+          '<div class="kpi-nilai">' + r.jumlah + "</div>" +
+          '<div class="kpi-nota">Communication Strategy ' + r.program.COMSTRA + " · Sesi Libat Urus " + r.program.SLU + " · Parlimen " + r.program.PARLIMEN + "</div>" +
+        "</article>" +
+        kadPeratus("Event selesai", r.kpi.event, r.kpi.aktif, "program aktif") +
+        kadPeratus("Report selesai", r.kpi.report, r.kpi.event, "event selesai") +
+        kadPeratus("Submission selesai", r.kpi.submission, r.kpi.submissionAsas, "report selesai") +
+        kadPeratus("Report ada link", r.kpi.link, r.kpi.report, "report selesai");
+
+      const palingKategori = Math.max.apply(null, SUSUNAN_KATEGORI.map(function (kategori) {
+        return r.kategori[kategori] || 0;
+      }).concat(1));
+
+      $("chart-kategori").innerHTML = SUSUNAN_KATEGORI.map(function (kategori) {
+        const nilai = r.kategori[kategori] || 0;
+        return '<div class="baris-chart">' +
+          '<span class="nama-chart">' + esc(kategori) + "</span>" +
+          '<span class="trek-chart" aria-hidden="true"><span class="isi-chart warna-' + KELAS_KATEGORI[kategori] + '" style="width:' + (nilai / palingKategori * 100) + '%"></span></span>' +
+          '<span class="nilai-chart">' + nilai + "</span>" +
+          "</div>";
+      }).join("");
+
+      const namaBulan = ["Jan", "Feb", "Mac", "Apr", "Mei", "Jun", "Jul", "Ogo", "Sep", "Okt", "Nov", "Dis"];
+      const programBulan = [["COMSTRA", "warna-comstra", "Communication Strategy"], ["SLU", "warna-slu", "Sesi Libat Urus"], ["PARLIMEN", "warna-slu-parlimen", "Sesi Libat Urus Parlimen"]];
+      const kunciBulan = Object.keys(r.bulan).sort();
+      const jumlahBulan = kunciBulan.map(function (kunci) {
+        return programBulan.reduce(function (jumlah, program) { return jumlah + (r.bulan[kunci][program[0]] || 0); }, 0);
+      });
+      const palingBulan = Math.max.apply(null, jumlahBulan.concat(1));
+
+      $("chart-bulan").innerHTML = kunciBulan.map(function (kunci, indeks) {
+        const segmen = programBulan.map(function (program) {
+          const nilai = r.bulan[kunci][program[0]] || 0;
+          if (!nilai) return "";
+          return '<span class="' + program[1] + '" style="height:' + (nilai / palingBulan * 100) + '%" title="' + esc(program[2] + ": " + nilai) + '"></span>';
+        }).join("");
+        return '<div class="lajur-bulan">' +
+          '<div class="nilai-bulan">' + jumlahBulan[indeks] + "</div>" +
+          '<div class="batang-bulan">' + segmen + "</div>" +
+          '<div class="label-bulan">' + esc(namaBulan[Number(kunci.slice(5, 7)) - 1] + " " + kunci.slice(2, 4)) + "</div>" +
+          "</div>";
+      }).join("") || '<div class="kosong">Tiada program bertarikh untuk pilihan ini.</div>';
+
+      $("nota-chart-bulan").textContent = r.diasingkan
+        ? r.diasingkan + " rekod batal atau tanpa tarikh sah tidak termasuk dalam chart."
+        : "";
+    }
+
+    async function muatRingkasan() {
+      $("masa-data").textContent = "Memuatkan ringkasan…";
+      try {
+        const out = await api("RINGKASAN");
+        if (sesi.token) return;
+        ringkasanAwam = out;
+        const masa = new Date(out.dikemasKini);
+        $("masa-data").textContent = "Data: " + pad(masa.getDate()) + "/" + pad(masa.getMonth() + 1) + "/" + masa.getFullYear() + " " + pad(masa.getHours()) + ":" + pad(masa.getMinutes());
+        $("banner").hidden = true;
+        paparTetamu();
+      } catch (err) {
+        $("masa-data").textContent = "Data gagal dimuatkan";
+        $("banner").hidden = false;
+        $("banner").textContent = "Ringkasan tak dapat dimuatkan: " + err.message + " Tekan Refresh untuk cuba lagi.";
+      }
+    }
+
+    function bukaTetamu() {
+      pilihan.program = "SEMUA";
+      pilihan.tetuan = "SEMUA";
+      skrin("app");
+      $("panel-admin").hidden = true;
+      $("pengguna").textContent = "Paparan awam";
+      bukaPaparan("paparan-dashboard");
+      muatRingkasan();
+    }
+
+    $("refresh").insertAdjacentHTML("afterend", '<button class="butang-biasa tetamu-sahaja" id="log-masuk-staf" type="button">Log Masuk Staf</button>');
+    $("butang-login").insertAdjacentHTML("afterend", '<button class="butang-biasa" id="kembali-awam" type="button">Kembali ke paparan awam</button>');
+    $("log-masuk-staf").addEventListener("click", function () { skrin("login"); });
+    $("kembali-awam").addEventListener("click", function () { bukaTetamu(); });
+
     /* Data hanya dimuatkan selepas server sahkan token. */
     paparButangTema();
     (async function mula() {
-      const token = bacaToken();
+      const token = bacaToken(); if (!token) { bukaTetamu(); return; }
       if (!token) {
         skrin("login");
         return;
