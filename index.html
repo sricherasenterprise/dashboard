@@ -351,6 +351,41 @@
     .batang-bulan span { display: block; min-height: 3px; }
     .batang-bulan span:last-child { border-radius: 5px 5px 0 0; }
     .label-bulan { color: var(--fg-2); font-size: .75rem; white-space: nowrap; }
+.lajur-bulan { gap: 12px; }
+.chart-bulan { padding-top: 14px; padding-right: 10px; }
+.batang-bulan { gap: 0; transform-origin: bottom; animation: bar-naik .7s ease-out both; }
+.batang-bulan span { position: relative; border-radius: 0 !important; }
+.batang-bulan span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 8px;
+  height: 100%;
+  background: inherit;
+  filter: brightness(.68);
+  transform: skewY(-45deg);
+  transform-origin: left top;
+}
+.batang-bulan span:last-child::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: inherit;
+  filter: brightness(1.2);
+  transform: skewX(-45deg);
+  transform-origin: left bottom;
+}
+@keyframes bar-naik {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .batang-bulan { animation: none; }
+}
     a { color: var(--accent); font-weight: 600; }
     .form-admin {
       display: grid;
